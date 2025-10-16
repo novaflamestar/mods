@@ -6,6 +6,8 @@ on:
   workflow_dispatch:
 jobs:
   docker:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Login to Docker Hub
