@@ -16,7 +16,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v5
       - name: setup qemu
-        uses: docker/setup-qemu-action@3
+        uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64,amd64
       - name: Set up Docker Buildx
