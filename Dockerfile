@@ -11,4 +11,4 @@ RUN uv sync --frozen --no-cache
 
 COPY src /app/src
 
-CMD ["/app/.venv/bin/fastapi", "run", "src/main.py", "--port", "9999", "--host", "0.0.0.0"]
+CMD ["uv", "run", "src/main.py"]
