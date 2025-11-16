@@ -29,7 +29,7 @@ client = AppClient(
 
 @client.tree.command(description="Bans a member from the server. (not really but you know it feels good)")
 async def mods_ban(interaction: discord.Interaction, member: discord.Member):
-    await interaction.response.send_message(f"banning {member.mention}...")
+    await interaction.response.send_message(f"The rat {interaction.user.mention} has spoken. Banning {member.mention}...")
 
 @mods_ban.error
 async def ping_error(interaction: discord.Interaction, error):
