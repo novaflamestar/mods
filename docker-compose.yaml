@@ -1,6 +1,7 @@
 services:
   mods:
     image: projectspade/mods:latest
+    network_mode: host
     env_file:
       - .env
     ports:
