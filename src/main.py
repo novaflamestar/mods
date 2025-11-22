@@ -2,13 +2,16 @@ import discord
 from discord.ext import commands
 from discord import Client
 from discord import app_commands
+from urllib.parse import urlparse
+from steam import SteamCommands
 import os
 import logging
 
 TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 GUILD_ID = os.environ["DISCORD_GUILD_ID"]
 
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler = logging.getLogger('discord')
+handler.setLevel(logging.INFO)
 
 guild_id = discord.Object(id=GUILD_ID)
 
@@ -34,6 +37,8 @@ async def mods_ban(interaction: discord.Interaction, member: discord.Member):
 @mods_ban.error
 async def ping_error(interaction: discord.Interaction, error):
     await interaction.response.send_message("An error occurred, please annoy david to fix it.")
+
+client.tree.add_command(SteamCommands())
 
 client.run(
     TOKEN, 
