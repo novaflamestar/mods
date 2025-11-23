@@ -23,6 +23,7 @@ class AppClient(Client):
         conn = await init_db()
         self.conn = Database(conn)
         self.tree.copy_global_to(guild=guild_id)
+        self.tree.add_command(SteamCommands(self.conn), guild=guild_id)
         await self.tree.sync(guild=guild_id)
 
 
@@ -60,6 +61,7 @@ async def mods_ban(interaction: discord.Interaction, member: discord.Member):
 
 
 @mods_ban.error
+@mods_stats.error
 async def ping_error(interaction: discord.Interaction, error):
     await interaction.response.send_message("An error occurred, please annoy david to fix it.")
 

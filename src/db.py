@@ -2,6 +2,7 @@ from functools import lru_cache
 import asyncpg
 from config import get_config
 from logging import getLogger
+from schemas import SteamAppGame
 
 handler = getLogger('discord')
 
@@ -46,6 +47,7 @@ class Database:
         result = await self.get_user(username)
         if result is None:
             result = await self.add_user(username)
+        handler.info(f"Upserted user {username}: {result}")
         return result
 
     async def get_user_stats(self, username: str):
@@ -60,14 +62,41 @@ class Database:
     async def get_users(self):
         pass
 
-    async def add_steam_game(self, game_id: str, game_app_id: str, game_name: str, creator: int):
-        pass
+    async def add_steam_game(self, game_app_id: int, game_name: str, creator: int):
+        handler.info(f"Adding steam game {game_name} to the database.")
+        result = await self.connection.fetchrow(
+            "INSERT INTO steam_games (appid, name, creator) VALUES ($1, $2, $3) RETURNING *;",
+            game_app_id,
+            game_name,
+            creator
+        )
+        handler.info(f"Steam game {game_name} added successfully: {result}")
+        return result
 
-    async def get_steam_games(self):
-        pass
+    async def get_steam_games(self) -> list[SteamAppGame]:
+        handler.info("Fetching all steam games from the database.")
+        result = await self.connection.fetch(
+            "SELECT * FROM steam_games;"
+        )
+        games = []
+        for row in result:
+            games.append(SteamAppGame(
+                app_id=row['appid'],
+                name=row['name']
+            ))
+        handler.info(f"{games}")
+        return games
 
-    async def delete_steam_game(self, game_id: str):
-        pass
+    async def delete_steam_game(self, game_app_id: int):
+        handler.info(
+            f"Deleting steam game with app ID {game_app_id} from the database.")
+        result = await self.connection.fetch(
+            "DELETE FROM steam_games WHERE appid = $1 RETURNING *;",
+            game_app_id,
+        )
+        handler.info(
+            f"Steam game with app ID {game_app_id} deleted successfully: {result}")
+        return result
 
     async def init_stats(self, user_id: int):
         handler.info(f"Initializing stats for user ID {user_id}.")
