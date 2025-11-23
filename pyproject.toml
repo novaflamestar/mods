@@ -12,7 +12,5 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = [
-    "alembic>=1.17.2",
-]
+dev = []
 
